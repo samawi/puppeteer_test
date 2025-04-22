@@ -3,8 +3,10 @@ import puppeteer from "puppeteer";
 async function main() {
   // Launch the browser with specific options
   const browser = await puppeteer.launch({
-    headless: "new",
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    headless: false,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    defaultViewport: null,
+    slowMo: 100
   });
   
   try {
@@ -15,8 +17,8 @@ async function main() {
     console.log('Navigating to developer.chrome.com...');
     await page.goto('https://developer.chrome.com/');
 
-    // Set screen size
-    await page.setViewport({width: 1080, height: 1024});
+    // Set screen size to a larger value
+    await page.setViewport({width: 1280, height: 800});
 
     // Type into search box
     console.log('Typing into search box...');
@@ -43,6 +45,10 @@ async function main() {
     // Take a screenshot for verification
     await page.screenshot({ path: 'chrome-dev.png' });
     console.log('Screenshot saved as chrome-dev.png');
+
+    // Add a delay before closing the browser so you can see the final state
+    console.log('Waiting 5 seconds before closing...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
 
   } catch (error) {
     console.error('An error occurred:', error);
